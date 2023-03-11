@@ -15,8 +15,8 @@ module.exports = {
         defaultKeyspaceSettings: {
             replication: replicationStrategy,
         },
-        queryOptions: { 
-            consistency: consistency 
+        queryOptions: {
+            consistency: consistency
         }
     },
     elasticsearch: {
@@ -43,9 +43,7 @@ module.exports = {
     },
     plugins: [
         { id: '@project-sunbird/form-service',ver: '1.0'},
-        { id: '@project-sunbird/review-comment', ver: '1.0' },
-        { id: '@project-sunbird/discussion-service', ver: '1.0' },
-        { id: '@project-sunbird/program', ver: '1.0' }      
+        { id: '@project-sunbird/program', ver: '1.0' }
     ],
     pluginBasePath: __dirname + '/node_modules/',
     logLevel: 'error'

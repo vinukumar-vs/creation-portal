@@ -16,7 +16,7 @@ const isAPIWhitelisted = require('../helpers/apiWhiteList');
 
 module.exports = function (app) {
 
-  require('./accountRecoveryRoute.js')(app) // account recovery route
+  // require('./accountRecoveryRoute.js')(app) // account recovery route
 
   // helper route to enable enable admin to update user fields
   app.patch('/learner/portal/user/v1/update',

@@ -2,7 +2,6 @@ const express = require('express'),
 fs = require('fs'),
 request = require('request'),
 compression = require('compression'),
-MobileDetect = require('mobile-detect'),
 _ = require('lodash'),
 path = require('path'),
 envHelper = require('../helpers/environmentVariablesHelper.js'),
@@ -94,10 +93,6 @@ module.exports = (app, keycloak) => {
     '/:slug/explore-course', '/:slug/explore-course/*', '/:slug/signup', '/signup', '/:slug/sign-in/*',
     '/sign-in/*', '/download/*', '/accountMerge/*', '/:slug/download/*', '/certs/*', '/recover/*'], redirectTologgedInPage, indexPage(false))
 
-  app.all(['*/dial/:dialCode', '/dial/:dialCode'], (req, res) => res.redirect('/get/dial/' + req.params.dialCode + '?source=scan'))
-
-  app.all('/app', (req, res) => res.redirect(envHelper.ANDROID_APP_URL))
-
   app.all(['/announcement', '/announcement/*', '/search', '/search/*',
     '/orgType', '/orgType/*', '/dashBoard', '/dashBoard/*',
     '/workspace', '/workspace/*', '/profile', '/profile/*', '/learn', '/learn/*', '/resources', '/sourcing', '/sourcing/*',
@@ -137,11 +132,6 @@ function getLocals(req) {
   locals.videoMaxSize = envHelper.sunbird_portal_video_max_size
   locals.reportsLocation = envHelper.sunbird_azure_report_container_name
   locals.previewCdnUrl = envHelper.sunbird_portal_preview_cdn_url
-  locals.offlineDesktopAppTenant = envHelper.sunbird_portal_offline_tenant
-  locals.offlineDesktopAppVersion = envHelper.sunbird_portal_offline_app_version
-  locals.offlineDesktopAppReleaseDate = envHelper.sunbird_portal_offline_app_release_date
-  locals.offlineDesktopAppSupportedLanguage = envHelper.sunbird_portal_offline_supported_languages,
-  locals.offlineDesktopAppDownloadUrl = envHelper.SUNBIRD_PORTAL_BASE_URL
   locals.portalBaseUrl = envHelper.SUNBIRD_PORTAL_BASE_URL
   locals.logFingerprintDetails = envHelper.LOG_FINGERPRINT_DETAILS,
   locals.deviceId = '';
@@ -183,10 +173,6 @@ const indexPage = (loggedInRoute) => {
 }
 
 const renderDefaultIndexPage = (req, res) => {
-  const mobileDetect = new MobileDetect(req.headers['user-agent'])
-  if ((req.path == '/get' || req.path == `/${req.params.slug}/get`) && mobileDetect.os() == 'AndroidOS') {
-    res.redirect(envHelper.ANDROID_APP_URL)
-  } else {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0')
     res.locals = getLocals(req);
     logger.info({
@@ -211,7 +197,6 @@ const renderDefaultIndexPage = (req, res) => {
       res.locals.cdnWorking = 'no';
       res.render(path.join(__dirname, '../dist', 'index.ejs'))
     }
-  }
 }
 // renders tenant page from cdn or from local files based on tenantCdnUrl exists
 const renderTenantPage = (req, res) => {
